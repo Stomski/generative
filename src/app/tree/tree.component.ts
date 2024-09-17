@@ -41,8 +41,8 @@ export class TreeComponent {
 
   setCanvasSize() {
     const canvas = this.canvasRef.nativeElement;
-    canvas.width = window.innerWidth * 0.8; // 80% of the window's width
-    canvas.height = window.innerHeight * 0.6; // 60% of the window's height
+    canvas.width = window.innerWidth * 0.9; // 80% of the window's width
+    canvas.height = window.innerHeight * 0.7; // 60% of the window's height
   }
 
   drawOnCanvas() {

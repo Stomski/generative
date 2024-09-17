@@ -23,6 +23,7 @@
 }
 
 .header-blurb {
+  padding-left: 12vmin;
   grid-column: 2 / 3; /* Blurb in the second column */
   grid-row: 2 / 3; /* Blurb below the title */
 }

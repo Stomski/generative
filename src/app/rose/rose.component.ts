@@ -24,7 +24,7 @@ export class RoseComponent {
 
   disabled = false;
   nMax = 8;
-  nMin = 4;
+  nMin = 3;
   showTicks = false;
   nStep = 0.0001;
   thumbLabel = false;
@@ -67,9 +67,15 @@ export class RoseComponent {
 
   setCanvasSize() {
     const canvas = this.canvasRef.nativeElement;
-    canvas.width = window.innerWidth * 0.8; // 80% of the window's width
-    canvas.height = window.innerHeight * 0.6; // 60% of the window's height
+    canvas.width = window.innerWidth * 0.9; // 80% of the window's width
+    canvas.height = window.innerHeight * 0.7; // 60% of the window's height
   }
+
+  numPointsMod = (value: number) => {
+    let normalizedInput = value / this.pMax;
+    const output = Math.pow(normalizedInput, 3);
+    return output * 3;
+  };
 
   drawOnCanvas() {
     if (this.ctx) {
@@ -96,7 +102,8 @@ export class RoseComponent {
       for (let i = 1; i < this.numPoints; i += 1) {
         let k = i * this.d;
 
-        let r = 220 * Math.sin(this.n * k);
+        let r =
+          (Math.min(canvasHeight, canvasWidth) / 4) * Math.sin(this.n * k);
         let x = r * Math.cos(k) * 2;
         let y = 2 * r * Math.sin(k);
         pointObj[i] = [x, y];
