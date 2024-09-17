@@ -1,0 +1,35 @@
+.header {
+  display: grid;
+  grid-template-columns: 15% 85%; /* 15% for logo, 85% for the text content */
+  grid-template-rows: auto; /* Let the content dictate the height */
+  align-items: center; /* Align items vertically in the center */
+}
+
+.header-logo {
+  grid-column: 1 / 2; /* Logo in the first column */
+  max-width: 100%; /* Ensure the logo doesn't overflow */
+  height: auto;
+}
+
+.header-title,
+.header-blurb {
+  margin: 0;
+}
+
+.header-title {
+  grid-column: 2 / 3; /* Title in the second column */
+  grid-row: 1 / 2; /* Title on the top */
+  font-size: 13vmin;
+}
+
+.header-blurb {
+  grid-column: 2 / 3; /* Blurb in the second column */
+  grid-row: 2 / 3; /* Blurb below the title */
+}
+
+.header-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%; /* Ensures full height usage for the text block */
+}
