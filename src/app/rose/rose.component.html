@@ -1,39 +1,59 @@
 <section id="rose-page">
-  <label for="nSlider">n:</label>
-  <mat-slider
-    class="sliders"
-    [disabled]="disabled"
-    [max]="nMax"
-    [min]="nMin"
-    [step]="nStep"
-    [discrete]="thumbLabel"
-    [showTickMarks]="showTicks"
-    [displayWith]="formatLabel"
-  >
-    <input
-      matSliderThumb
-      [(ngModel)]="n"
-      (ngModelChange)="drawOnCanvas()"
-      #slider
-    />
-  </mat-slider>
-  <label for="nSlider">d:</label>
-  <mat-slider
-    class="sliders"
-    [disabled]="disabled"
-    [max]="dMax"
-    [min]="dMin"
-    [step]="dStep"
-    [discrete]="thumbLabel"
-    [showTickMarks]="showTicks"
-    [displayWith]="formatLabel"
-  >
-    <input
-      matSliderThumb
-      [(ngModel)]="d"
-      (ngModelChange)="drawOnCanvas()"
-      #slider
-    />
-  </mat-slider>
+  <div class="modifiers">
+    <label for="nSlider">n:</label>
+    <mat-slider
+      class="sliders"
+      [disabled]="disabled"
+      [max]="nMax"
+      [min]="nMin"
+      [step]="nStep"
+      [discrete]="thumbLabel"
+      [showTickMarks]="showTicks"
+      [displayWith]="formatLabel"
+    >
+      <input
+        matSliderThumb
+        [(ngModel)]="n"
+        (ngModelChange)="drawOnCanvas()"
+        #slider
+      />
+    </mat-slider>
+    <label for="dSlider">d:</label>
+    <mat-slider
+      class="sliders"
+      [disabled]="disabled"
+      [max]="dMax"
+      [min]="dMin"
+      [step]="dStep"
+      [discrete]="thumbLabel"
+      [showTickMarks]="showTicks"
+      [displayWith]="formatLabel"
+    >
+      <input
+        matSliderThumb
+        [(ngModel)]="d"
+        (ngModelChange)="drawOnCanvas()"
+        #slider
+      />
+    </mat-slider>
+    <label for="nSlider">number of Points:</label>
+    <mat-slider
+      class="sliders"
+      [disabled]="disabled"
+      [max]="pMax"
+      [min]="pMin"
+      [step]="pStep"
+      [discrete]="thumbLabel"
+      [showTickMarks]="showTicks"
+      [displayWith]="formatLabel"
+    >
+      <input
+        matSliderThumb
+        [(ngModel)]="numPoints"
+        (ngModelChange)="drawOnCanvas()"
+        #slider
+      />
+    </mat-slider>
+  </div>
   <canvas id="rose-canvas" #roseCanvas></canvas>
 </section>

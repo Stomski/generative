@@ -37,6 +37,10 @@ export class RoseComponent {
   d = 74.238;
   numPoints = 1000;
 
+  pMax = 5000;
+  pMin = 3;
+  pStep = 1;
+
   @ViewChild('roseCanvas', { static: false })
   canvasRef!: ElementRef<HTMLCanvasElement>;
   private ctx!: CanvasRenderingContext2D | null;

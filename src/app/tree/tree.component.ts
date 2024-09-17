@@ -1,11 +1,14 @@
 import { Component, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 import { MatSliderModule } from '@angular/material/slider';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-tree',
   standalone: true,
-  imports: [CommonModule, MatSliderModule],
+  imports: [CommonModule, MatSliderModule, MatInputModule, FormsModule],
   templateUrl: './tree.component.html',
   styleUrls: ['./tree.component.css'],
 })
@@ -14,10 +17,26 @@ export class TreeComponent {
   canvasRef!: ElementRef<HTMLCanvasElement>;
   private ctx!: CanvasRenderingContext2D | null;
 
+  disabled = false;
+  thumbLabel = false;
+  showTicks = false;
+
+  angleInputField: number = 0; // Use number type
+  skewInputField: number = 0; // Use number type
+
+  aMax = 500;
+  aMin = 0;
+  aStep = 1;
+
+  sMax = 90;
+  sMin = -90;
+  sStep = 1;
+
   ngAfterViewInit() {
     const canvas = this.canvasRef.nativeElement;
     this.ctx = canvas.getContext('2d');
     this.setCanvasSize();
+    this.drawOnCanvas();
   }
 
   setCanvasSize() {
@@ -63,14 +82,14 @@ export class TreeComponent {
         context.restore();
       }
 
-      function branch(length: number) {
-        let angle = Math.PI / 4;
-        let skewangle = 0;
+      const branch = (length: number) => {
+        let angle = (Math.PI / 500) * this.angleInputField;
+        let skewangle = (Math.PI / 500) * this.skewInputField;
         context.beginPath();
         context.moveTo(0, 0);
         context.lineTo(0, -length); // Draw the branch line
         context.stroke();
-        if (length > 2) {
+        if (length > 1) {
           // Continue branching if the length is greater than 2
           context.translate(0, -length);
           context.save();
@@ -83,7 +102,7 @@ export class TreeComponent {
           branch(length * 0.7); // Recursive call for the left branch
           context.restore();
         }
-      }
+      };
       drawTree();
     }
   }

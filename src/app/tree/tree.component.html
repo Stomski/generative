@@ -1,7 +1,39 @@
 <section id="tree-page">
-  <button (click)="drawOnCanvas()">draw</button>
-  <mat-slider min="1" max="5" step="0.5">
-    <input matSliderThumb value="1.5" />
-  </mat-slider>
+  <div class="modifiers">
+    <label for="aSlider">branch angle:</label>
+    <mat-slider
+      class="sliders"
+      [disabled]="disabled"
+      [max]="aMax"
+      [min]="aMin"
+      [step]="aStep"
+      [discrete]="thumbLabel"
+      [showTickMarks]="showTicks"
+    >
+      <input
+        matSliderThumb
+        [(ngModel)]="angleInputField"
+        (ngModelChange)="drawOnCanvas()"
+        #slider
+      />
+    </mat-slider>
+    <label for="aSlider">branch skew:</label>
+    <mat-slider
+      class="sliders"
+      [disabled]="disabled"
+      [max]="sMax"
+      [min]="sMin"
+      [step]="sStep"
+      [discrete]="thumbLabel"
+      [showTickMarks]="showTicks"
+    >
+      <input
+        matSliderThumb
+        [(ngModel)]="skewInputField"
+        (ngModelChange)="drawOnCanvas()"
+        #slider
+      />
+    </mat-slider>
+  </div>
   <canvas id="tree-canvas" #treeCanvas></canvas>
 </section>
