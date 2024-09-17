@@ -12,6 +12,7 @@ main {
 }
 .content {
   grid-row: 2/2;
+  margin-top: 1vh;
 }
 .header-logo {
   grid-column: 1 / 2; /* Logo in the first column */
@@ -31,6 +32,11 @@ main {
     max-height: 100%; /* Ensure it doesn't exceed the height of its container */
     height: 100%; /* Ensure it takes up the full height of its container */
     overflow: hidden; /* Prevent overflow, but ensure content fits */
+  }
+}
+@media (min-width: 1000px) {
+  .header-blurb {
+    display: none;
   }
 }
 
