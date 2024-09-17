@@ -1,21 +1,21 @@
-import { Component, ElementRef, ViewChild, AfterViewInit } from "@angular/core";
-import { CommonModule } from "@angular/common";
+import { Component, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: "app-tree",
+  selector: 'app-tree',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: "./tree.component.html",
-  styleUrls: ["./tree.component.css"],
+  templateUrl: './tree.component.html',
+  styleUrls: ['./tree.component.css'],
 })
 export class TreeComponent {
-  @ViewChild("treeCanvas", { static: false })
+  @ViewChild('treeCanvas', { static: false })
   canvasRef!: ElementRef<HTMLCanvasElement>;
   private ctx!: CanvasRenderingContext2D | null;
 
   ngAfterViewInit() {
     const canvas = this.canvasRef.nativeElement;
-    this.ctx = canvas.getContext("2d");
+    this.ctx = canvas.getContext('2d');
     this.setCanvasSize();
   }
 
@@ -26,7 +26,7 @@ export class TreeComponent {
   }
 
   drawOnCanvas() {
-    console.log("draw on canvas called from tree");
+    console.log('draw on canvas called from tree');
     if (this.ctx) {
       const canvas = this.canvasRef.nativeElement;
 
@@ -40,9 +40,9 @@ export class TreeComponent {
         canvas.height / 1.2,
         700
       );
-      gradient.addColorStop(0, "white");
+      gradient.addColorStop(0, 'white');
 
-      gradient.addColorStop(1, "black");
+      gradient.addColorStop(1, 'black');
 
       // let angleInputField = document.querySelector("#angle");
       // let skewInputField = document.querySelector("#angle-modifier");
@@ -56,13 +56,15 @@ export class TreeComponent {
         context.save();
 
         context.translate(canvas.width * 0.5, canvas.height);
-        branch(canvas.height / 2.2);
+
+        branch(Math.min(canvas.height, canvas.width) / 3);
+
         context.restore();
       }
 
       function branch(length: number) {
-        let angle = Math.PI / 500;
-        let skewangle = 1;
+        let angle = Math.PI / 4;
+        let skewangle = 0;
         context.beginPath();
         context.moveTo(0, 0);
         context.lineTo(0, -length); // Draw the branch line
