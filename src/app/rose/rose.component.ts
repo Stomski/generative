@@ -112,15 +112,13 @@ export class RoseComponent {
         context.stroke();
       }
 
-      // Define the gradient
       let gradient2 = context.createLinearGradient(
         -canvasWidth / 2,
         canvasHeight / 2 - 35,
-        -canvasWidth / 2 + 650,
+        canvasWidth / 2,
         canvasHeight / 2 - 8
       );
 
-      // Add rainbow color stops to the gradient2
       gradient2.addColorStop(0, 'red');
       gradient2.addColorStop(0.16, 'orange');
       gradient2.addColorStop(0.33, 'yellow');
