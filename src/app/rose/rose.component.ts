@@ -62,7 +62,9 @@ export class RoseComponent {
   numPointsMod = (value: number) => {
     let normalizedInput = value / this.pMax;
     const output = Math.pow(normalizedInput, 3);
-    return Math.floor(output * 8000);
+    let returnValue = Math.floor(output * 8000);
+    if (returnValue < 3) returnValue = 3;
+    return returnValue;
   };
 
   drawOnCanvas() {
@@ -128,7 +130,7 @@ export class RoseComponent {
       gradient2.addColorStop(1, 'violet');
 
       context.fillStyle = gradient2;
-      context.font = 'italic ' + 20 + 'pt Arial ';
+      context.font = 'italic ' + 15 + 'pt Arial ';
       context.fillText(
         `n=${this.n}`,
         -canvasWidth / 2 + 20,
@@ -140,10 +142,10 @@ export class RoseComponent {
         canvasHeight / 2 - 8
       );
       context.fillStyle = gradient2;
-
+      context.font = 'italic ' + 15 + 'pt Arial ';
       context.fillText(
         `numPoints =${numPoints}`,
-        -canvasWidth / 2 + 650,
+        -canvasWidth / 2 + (canvasWidth - 175),
         canvasHeight / 2 - 35
       );
       context.translate(-canvasWidth / 2, -canvasHeight / 2);
