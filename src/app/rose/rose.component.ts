@@ -1,42 +1,44 @@
-import { Component, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
-import { MatSliderModule } from '@angular/material/slider';
-import { NgModule } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
+import { MatSliderModule, MatSlider } from '@angular/material/slider';
+import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms'; // Import for two-way binding
+import { FormsModule } from '@angular/forms'; // Import for two-way binding
+import { SliderConfigurableExample } from '../slider-component/slider-component.component';
 
 @Component({
   selector: 'app-rose',
   standalone: true,
-  imports: [CommonModule, MatSliderModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, MatSliderModule, FormsModule],
   templateUrl: './rose.component.html',
   styleUrls: ['./rose.component.css'],
 })
 export class RoseComponent {
+  n = 6.324;
+  d = 74.238;
+  numPoints = 1000;
+
   @ViewChild('roseCanvas', { static: false })
   canvasRef!: ElementRef<HTMLCanvasElement>;
   private ctx!: CanvasRenderingContext2D | null;
 
   ngAfterViewInit() {
+    console.log('AFTER INIT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
     const canvas = this.canvasRef.nativeElement;
     this.ctx = canvas.getContext('2d');
     this.setCanvasSize();
   }
-  n = 6.324;
-  d = 74.238;
-  numPoints = 1000;
-
   updateN(event: any): void {
     console.log('event in n', event);
     this.n = event.value;
   }
 
-  updateD(event: any): void {
-    this.d = event.value;
-  }
+  // updateD(event: any): void {
+  //   this.d = event.value;
+  // }
 
-  updateNumPoints(event: any): void {
-    this.numPoints = event.value;
-  }
+  // updateNumPoints(event: any): void {
+  //   this.numPoints = event.value;
+  // }
 
   setCanvasSize() {
     const canvas = this.canvasRef.nativeElement;
@@ -56,10 +58,6 @@ export class RoseComponent {
 
       gradient.addColorStop(1, 'black');
 
-      let n = 6.324;
-      let d = 74.238;
-      let numPoints = 1000;
-
       context.fillStyle = gradient;
       context.fillRect(
         -canvasWidth / 2,
@@ -70,16 +68,16 @@ export class RoseComponent {
 
       let pointObj: Record<number, [number, number]> = {};
 
-      for (let i = 1; i < numPoints; i += 1) {
-        let k = i * d;
+      for (let i = 1; i < this.numPoints; i += 1) {
+        let k = i * this.d;
 
-        let r = 220 * Math.sin(n * k);
+        let r = 220 * Math.sin(this.n * k);
         let x = r * Math.cos(k) * 2;
         let y = 2 * r * Math.sin(k);
         pointObj[i] = [x, y];
       }
 
-      for (let i = 1; i < numPoints - 1; i += 1) {
+      for (let i = 1; i < this.numPoints - 1; i += 1) {
         let [currX, currY] = pointObj[i];
         let [nextX, nextY] = pointObj[i + 1];
         context.beginPath();
