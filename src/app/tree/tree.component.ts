@@ -1,12 +1,11 @@
 import { Component, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 import { MatSliderModule } from '@angular/material/slider';
 import { CommonModule } from '@angular/common';
-import { SliderConfigurableExample } from '../slider-component/slider-component.component';
 
 @Component({
   selector: 'app-tree',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatSliderModule],
   templateUrl: './tree.component.html',
   styleUrls: ['./tree.component.css'],
 })

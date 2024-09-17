@@ -1,7 +1,39 @@
 <section id="rose-page">
-  <button (click)="drawOnCanvas()">Draw</button>
-
   <label for="nSlider">n:</label>
-  <app-slider-component></app-slider-component>
+  <mat-slider
+    class="sliders"
+    [disabled]="disabled"
+    [max]="nMax"
+    [min]="nMin"
+    [step]="nStep"
+    [discrete]="thumbLabel"
+    [showTickMarks]="showTicks"
+    [displayWith]="formatLabel"
+  >
+    <input
+      matSliderThumb
+      [(ngModel)]="n"
+      (ngModelChange)="drawOnCanvas()"
+      #slider
+    />
+  </mat-slider>
+  <label for="nSlider">d:</label>
+  <mat-slider
+    class="sliders"
+    [disabled]="disabled"
+    [max]="dMax"
+    [min]="dMin"
+    [step]="dStep"
+    [discrete]="thumbLabel"
+    [showTickMarks]="showTicks"
+    [displayWith]="formatLabel"
+  >
+    <input
+      matSliderThumb
+      [(ngModel)]="d"
+      (ngModelChange)="drawOnCanvas()"
+      #slider
+    />
+  </mat-slider>
   <canvas id="rose-canvas" #roseCanvas></canvas>
 </section>

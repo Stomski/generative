@@ -1,18 +1,38 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { MatSliderModule, MatSlider } from '@angular/material/slider';
-import { BrowserModule } from '@angular/platform-browser';
+import { MatSliderModule } from '@angular/material/slider';
+
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // Import for two-way binding
-import { SliderConfigurableExample } from '../slider-component/slider-component.component';
+import { FormsModule } from '@angular/forms';
+
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-rose',
   standalone: true,
-  imports: [CommonModule, MatSliderModule, FormsModule],
+  imports: [CommonModule, MatSliderModule, FormsModule, MatInputModule],
   templateUrl: './rose.component.html',
   styleUrls: ['./rose.component.css'],
 })
 export class RoseComponent {
+  formatLabel(value: number): string {
+    if (value >= 1000) {
+      return Math.round(value / 1000) + 'k';
+    }
+
+    return `${value}`;
+  }
+
+  disabled = false;
+  nMax = 8;
+  nMin = 4;
+  showTicks = false;
+  nStep = 0.0001;
+  thumbLabel = false;
+
+  dMin = 1;
+  dMax = 120;
+  dStep = 0.5;
+
   n = 6.324;
   d = 74.238;
   numPoints = 1000;
@@ -26,6 +46,7 @@ export class RoseComponent {
     const canvas = this.canvasRef.nativeElement;
     this.ctx = canvas.getContext('2d');
     this.setCanvasSize();
+    this.drawOnCanvas();
   }
   updateN(event: any): void {
     console.log('event in n', event);

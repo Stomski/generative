@@ -1,5 +1,7 @@
 <section id="tree-page">
   <button (click)="drawOnCanvas()">draw</button>
-
+  <mat-slider min="1" max="5" step="0.5">
+    <input matSliderThumb value="1.5" />
+  </mat-slider>
   <canvas id="tree-canvas" #treeCanvas></canvas>
 </section>
