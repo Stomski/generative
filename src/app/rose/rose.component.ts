@@ -146,7 +146,7 @@ export class RoseComponent {
       context.fillText(
         `numPoints =${numPoints}`,
         -canvasWidth / 2 + (canvasWidth - 175),
-        canvasHeight / 2 - 35
+        canvasHeight / 2 - 8
       );
       context.translate(-canvasWidth / 2, -canvasHeight / 2);
     }
