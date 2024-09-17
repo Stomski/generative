@@ -4,6 +4,3 @@
   align-items: center; /* Horizontally center the canvas */
   justify-content: flex-start; /* Ensure the button stays at the top */
 }
-
-#rose-canvas {
-}
