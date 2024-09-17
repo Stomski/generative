@@ -31,11 +31,11 @@ export class RoseComponent {
 
   dMin = 1;
   dMax = 120;
-  dStep = 0.5;
+  dStep = 0.0005;
 
   n = 6.324;
   d = 74.238;
-  numPoints = 1000;
+  numPointsInput = 1000;
 
   pMax = 5000;
   pMin = 3;
@@ -52,18 +52,6 @@ export class RoseComponent {
     this.setCanvasSize();
     this.drawOnCanvas();
   }
-  updateN(event: any): void {
-    console.log('event in n', event);
-    this.n = event.value;
-  }
-
-  // updateD(event: any): void {
-  //   this.d = event.value;
-  // }
-
-  // updateNumPoints(event: any): void {
-  //   this.numPoints = event.value;
-  // }
 
   setCanvasSize() {
     const canvas = this.canvasRef.nativeElement;
@@ -74,11 +62,12 @@ export class RoseComponent {
   numPointsMod = (value: number) => {
     let normalizedInput = value / this.pMax;
     const output = Math.pow(normalizedInput, 3);
-    return output * 3;
+    return Math.floor(output * 8000);
   };
 
   drawOnCanvas() {
     if (this.ctx) {
+      let numPoints = this.numPointsMod(this.numPointsInput);
       const canvas = this.canvasRef.nativeElement;
       const canvasWidth = canvas.width;
       const canvasHeight = canvas.height;
@@ -99,7 +88,7 @@ export class RoseComponent {
 
       let pointObj: Record<number, [number, number]> = {};
 
-      for (let i = 1; i < this.numPoints; i += 1) {
+      for (let i = 1; i < numPoints; i += 1) {
         let k = i * this.d;
 
         let r =
@@ -109,7 +98,7 @@ export class RoseComponent {
         pointObj[i] = [x, y];
       }
 
-      for (let i = 1; i < this.numPoints - 1; i += 1) {
+      for (let i = 1; i < numPoints - 1; i += 1) {
         let [currX, currY] = pointObj[i];
         let [nextX, nextY] = pointObj[i + 1];
         context.beginPath();
@@ -120,6 +109,43 @@ export class RoseComponent {
 
         context.stroke();
       }
+
+      // Define the gradient
+      let gradient2 = context.createLinearGradient(
+        -canvasWidth / 2,
+        canvasHeight / 2 - 35,
+        -canvasWidth / 2 + 650,
+        canvasHeight / 2 - 8
+      );
+
+      // Add rainbow color stops to the gradient2
+      gradient2.addColorStop(0, 'red');
+      gradient2.addColorStop(0.16, 'orange');
+      gradient2.addColorStop(0.33, 'yellow');
+      gradient2.addColorStop(0.49, 'green');
+      gradient2.addColorStop(0.66, 'blue');
+      gradient2.addColorStop(0.82, 'indigo');
+      gradient2.addColorStop(1, 'violet');
+
+      context.fillStyle = gradient2;
+      context.font = 'italic ' + 20 + 'pt Arial ';
+      context.fillText(
+        `n=${this.n}`,
+        -canvasWidth / 2 + 20,
+        canvasHeight / 2 - 35
+      );
+      context.fillText(
+        `d=${this.d}`,
+        -canvasWidth / 2 + 20,
+        canvasHeight / 2 - 8
+      );
+      context.fillStyle = gradient2;
+
+      context.fillText(
+        `numPoints =${numPoints}`,
+        -canvasWidth / 2 + 650,
+        canvasHeight / 2 - 35
+      );
       context.translate(-canvasWidth / 2, -canvasHeight / 2);
     }
   }
