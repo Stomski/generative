@@ -1,4 +1,5 @@
 import { Component, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
+import { MatSliderModule } from '@angular/material/slider';
 import { CommonModule } from '@angular/common';
 
 @Component({
