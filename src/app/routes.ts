@@ -7,7 +7,7 @@ const routeConfig: Routes = [
   {
     path: ``,
     component: HomeComponent,
-    title: `Home Page`,
+    title: `Generative`,
   },
   {
     path: 'tree',
