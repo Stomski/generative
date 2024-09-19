@@ -9,3 +9,12 @@
 .home-title {
   font-size: 6vmin;
 }
+ul {
+  list-style: none;
+  list-style: none;
+  padding: 0; /* Remove default padding */
+  margin: 0; /* Remove default margin */
+  display: flex; /* Flexbox to center items */
+  flex-direction: column; /* Stack list items vertically */
+  align-items: center; /* Center items horizontally */
+}

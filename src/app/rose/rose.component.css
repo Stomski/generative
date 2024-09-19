@@ -1,6 +1,5 @@
 #rose-page {
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* Horizontally center the canvas */
-  justify-content: flex-start; /* Ensure the button stays at the top */
+  display: grid;
+  justify-items: center;
+  align-items: center;
 }
