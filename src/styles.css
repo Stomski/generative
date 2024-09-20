@@ -6,5 +6,12 @@ body {
 }
 body {
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-family: "Gilroy", Roboto, "Helvetica Neue", sans-serif; /* Gilroy will be the primary font */
+}
+
+@font-face {
+  font-family: "Gilroy";
+  src: url("../src/assets/fonts/Gilroy-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
 }
