@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { TreeComponent } from '../app/tree/tree.component';
 import { RouterModule } from '@angular/router';
 
 @Component({

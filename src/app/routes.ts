@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { HomeComponent } from '../home/home.component';
+import { HomeComponent } from './home/home.component';
 import { TreeComponent } from './tree/tree.component';
 import { RoseComponent } from './rose/rose.component';
 
