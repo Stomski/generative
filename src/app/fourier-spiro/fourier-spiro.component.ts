@@ -32,7 +32,7 @@ export class FourierSpiroComponent {
     );
   }
 
-  radius: number = 200;
+  radius: number = 100;
   angle: number = (Math.PI / 2) * 3;
   trackingArray: TrackingItem[] = [];
 
@@ -73,9 +73,6 @@ export class FourierSpiroComponent {
       context.translate(canvas.width / 2, canvas.height / 2);
 
       /********************************************************************************** */
-      //below is a recursive attempt at this circle thing
-
-      /********************************************************************************** */
       //COLORS
       context.lineWidth = 1;
       context.strokeStyle = `rgb(255, 0, 0)`; // Red
@@ -85,40 +82,48 @@ export class FourierSpiroComponent {
       //in order to store the path im gonna make an array of vertexs, then iterate at the end and draw a path
 
       const drawGeneration = (center: any, radius: number, angle: number) => {
+        let x = 0;
+        let y = 0;
+        let previousX;
+        let previousY;
+        let numGenerations = 9;
         context.save();
-        context.beginPath();
-        context.arc(center[0], center[1], radius, 0, Math.PI * 2);
-        context.stroke();
 
-        context.beginPath();
-        context.translate(center[0], center[1]);
-        context.moveTo(0, 0);
-        context.lineTo(radius * Math.cos(angle), radius * Math.sin(angle));
+        for (let i = 0; i < numGenerations; i++) {
+          previousX = x;
+          previousY = y;
+          context.lineWidth = 1;
 
-        context.stroke();
-        if (radius > 40) {
-          drawGeneration(
-            [radius * Math.cos(angle), radius * Math.sin(angle)],
-            radius / 2,
-            angle * 2
-          );
-        } else {
-          if (this.trackingArray.length < 500) {
-            this.trackingArray.push({
-              x: radius * Math.cos(angle),
-              y: radius * Math.sin(angle),
-            });
+          context.beginPath();
+          context.arc(previousX, previousY, radius, 0, Math.PI * 2);
+          context.stroke();
+
+          let n = i * 2 + 1;
+
+          x += radius * Math.cos(n * angle);
+          y += radius * Math.sin(n * angle);
+
+          context.lineWidth = 2;
+
+          context.beginPath();
+          context.moveTo(previousX, previousY);
+          context.lineTo(x, y);
+          context.stroke();
+
+          radius = radius / 2;
+
+          if (i === numGenerations - 1) {
+            this.trackingArray.push({ x: x, y: y });
           }
+
+          // x += radius * Math.cos(n * angle);
+          // y += radius * Math.sin(n * angle);
         }
 
-        console.log(
-          this.trackingArray,
-          '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
-        );
+        context.stroke();
+
         context.restore();
       };
-
-      drawGeneration([0, 0], radius, angle);
 
       const drawTracer = () => {
         context.save();
@@ -135,8 +140,9 @@ export class FourierSpiroComponent {
         }
         context.restore();
       };
-      drawTracer();
+      drawGeneration(0, radius, angle);
 
+      drawTracer();
       /********************************************************************************** */
 
       /**
