@@ -28,55 +28,156 @@ export class FourierSpiroComponent {
   }
 
   radius: number = 100;
-  angle: number = 0;
+  angle: number = -Math.PI / 2;
   numPoints: number = 50;
 
   drawOnCanvas(radius: number, angle: number, numPoints: number) {
+    /**
+     *
+     *
+     *
+     *
+     *
+     */
     if (this.ctx) {
       const context = this.ctx;
       const canvas = this.canvasRef.nativeElement;
 
+      // reset background
+      /**
+       *
+       *
+       *
+       *
+       *
+       */
+
       context.fillStyle = 'rgb(0,0,0)';
       context.fillRect(0, 0, canvas.width, canvas.height);
+
+      /**
+       *
+       *
+       *
+       *
+       *
+       */
+
       context.save();
 
       context.translate(canvas.width / 2, canvas.height / 2);
+
+      /**
+       *
+       *
+       *
+       *
+       *
+       */
+
       context.lineWidth = 1;
       context.strokeStyle = `rgb(255, 0, 0)`; // Red
 
       context.fillStyle = 'rgb(255,255,255)';
       context.fillRect(0, 0, 2, 2);
-      let numPoints = 50;
 
-      function drawcircle(numPoints: number, radius: number) {
-        for (let i = 0; i < numPoints; i++) {
-          let x = radius * Math.cos((Math.PI * 2 * i) / numPoints);
-          let y = radius * Math.sin((Math.PI * 2 * i) / numPoints);
-          let lastX = radius * Math.cos((Math.PI * 2 * i - 1) / numPoints);
-          let lastY = radius * Math.sin((Math.PI * 2 * i - 1) / numPoints);
-          if (i === 0) {
-            console.log('loop start');
-            context.beginPath();
-            context.moveTo(x, y);
-          } else if (i === numPoints - 1) {
-            console.log('loopend', window.requestAnimationFrame);
-            context.lineTo(lastX, lastY);
-            context.closePath();
-            context.stroke();
-          } else {
-            context.fillRect(x, y, 1, 1);
-            context.lineTo(lastX, lastY);
-          }
-        }
-      }
-      drawcircle(numPoints, radius);
+      context.fillStyle = 'rgb(0,0,0)';
+      context.strokeStyle = `rgb(255, 0, 0)`; // Red
 
+      context.beginPath();
+      context.arc(0, 0, radius, 0, 2 * Math.PI);
+
+      context.closePath();
+      context.stroke();
+
+      context.beginPath();
+      context.moveTo(0, 0);
+      context.lineTo(radius * Math.cos(angle), radius * Math.sin(angle));
+
+      context.stroke();
+
+      context.moveTo(
+        radius * 1.5 * Math.cos(angle),
+        radius * 1.5 * Math.sin(angle)
+      );
+
+      context.beginPath();
+      context.arc(
+        radius * 1.5 * Math.cos(angle),
+        radius * 1.5 * Math.sin(angle),
+        radius / 2,
+        0,
+        2 * Math.PI
+      );
+
+      context.closePath();
+      context.stroke();
+
+      context.beginPath();
+      //  context.lineTo()
+
+      context.fillStyle = 'rgb(255,255,255)';
+
+      // context.fillRect(
+      //   radius * 1.5 * Math.cos(angle),
+      //   radius * 1.5 * Math.sin(angle),
+      //   2,
+      //   2
+      // );
+
+      context.translate(
+        radius * 1.5 * Math.cos(angle),
+        radius * 1.5 * Math.sin(angle)
+      );
+      context.fillRect(0, 0, 2, 2);
+
+      context.beginPath();
+
+      context.moveTo(0, 0);
+      context.lineTo(
+        radius * 0.5 * Math.cos(angle * 2 + Math.PI / 2),
+        radius * 0.5 * Math.sin(angle * 2 + Math.PI / 2)
+      );
+      context.stroke();
+
+      /**
+       *
+       *
+       *
+       *
+       *
+       */
       context.restore();
-    }
+      /**
+       *
+       *
+       *
+       *
+       *
+       */
 
-    this.radius++;
-    window.requestAnimationFrame(() =>
-      this.drawOnCanvas(this.radius, this.angle, this.numPoints)
-    );
+      /**
+       *
+       *
+       *
+       *
+       *
+       */
+      this.angle -= Math.PI / 180;
+
+      // this.radius++;
+      if (this.radius > 300) this.radius = 200;
+
+      /**
+       *
+       *
+       *
+       *
+       *
+       */
+      window.requestAnimationFrame(() =>
+        this.drawOnCanvas(this.radius, this.angle, this.numPoints)
+      );
+    }
   }
 }
