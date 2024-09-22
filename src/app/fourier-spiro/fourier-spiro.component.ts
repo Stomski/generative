@@ -1,4 +1,9 @@
 import { Component, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
+interface TrackingItem {
+  x: number;
+  y: number;
+  // add other properties as needed
+}
 
 @Component({
   selector: 'app-fourier-spiro',
@@ -23,15 +28,15 @@ export class FourierSpiroComponent {
     this.ctx = canvas.getContext('2d');
     this.setCanvasSize();
     window.requestAnimationFrame(() =>
-      this.drawOnCanvas(this.radius, this.angle, this.numPoints)
+      this.drawOnCanvas(this.radius, this.angle)
     );
   }
 
-  radius: number = 100;
-  angle: number = -Math.PI / 2;
-  numPoints: number = 50;
+  radius: number = 200;
+  angle: number = (Math.PI / 2) * 3;
+  trackingArray: TrackingItem[] = [];
 
-  drawOnCanvas(radius: number, angle: number, numPoints: number) {
+  drawOnCanvas(radius: number, angle: number) {
     /**
      *
      *
@@ -67,78 +72,72 @@ export class FourierSpiroComponent {
 
       context.translate(canvas.width / 2, canvas.height / 2);
 
-      /**
-       *
-       *
-       *
-       *
-       *
-       */
+      /********************************************************************************** */
+      //below is a recursive attempt at this circle thing
 
+      /********************************************************************************** */
+      //COLORS
       context.lineWidth = 1;
       context.strokeStyle = `rgb(255, 0, 0)`; // Red
 
-      context.fillStyle = 'rgb(255,255,255)';
-      context.fillRect(0, 0, 2, 2);
+      /************************** */
 
-      context.fillStyle = 'rgb(0,0,0)';
-      context.strokeStyle = `rgb(255, 0, 0)`; // Red
+      //in order to store the path im gonna make an array of vertexs, then iterate at the end and draw a path
 
-      context.beginPath();
-      context.arc(0, 0, radius, 0, 2 * Math.PI);
+      const drawGeneration = (center: any, radius: number, angle: number) => {
+        context.save();
+        context.beginPath();
+        context.arc(center[0], center[1], radius, 0, Math.PI * 2);
+        context.stroke();
 
-      context.closePath();
-      context.stroke();
+        context.beginPath();
+        context.translate(center[0], center[1]);
+        context.moveTo(0, 0);
+        context.lineTo(radius * Math.cos(angle), radius * Math.sin(angle));
 
-      context.beginPath();
-      context.moveTo(0, 0);
-      context.lineTo(radius * Math.cos(angle), radius * Math.sin(angle));
+        context.stroke();
+        if (radius > 40) {
+          drawGeneration(
+            [radius * Math.cos(angle), radius * Math.sin(angle)],
+            radius / 2,
+            angle * 2
+          );
+        } else {
+          if (this.trackingArray.length < 500) {
+            this.trackingArray.push({
+              x: radius * Math.cos(angle),
+              y: radius * Math.sin(angle),
+            });
+          }
+        }
 
-      context.stroke();
+        console.log(
+          this.trackingArray,
+          '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
+        );
+        context.restore();
+      };
 
-      context.moveTo(
-        radius * 1.5 * Math.cos(angle),
-        radius * 1.5 * Math.sin(angle)
-      );
+      drawGeneration([0, 0], radius, angle);
 
-      context.beginPath();
-      context.arc(
-        radius * 1.5 * Math.cos(angle),
-        radius * 1.5 * Math.sin(angle),
-        radius / 2,
-        0,
-        2 * Math.PI
-      );
+      const drawTracer = () => {
+        context.save();
+        for (let i = 0; i < this.trackingArray.length; i++) {
+          if (i === 0) {
+            context.beginPath();
+            context.moveTo(this.trackingArray[i].x, this.trackingArray[i].y);
+          } else if (i === this.trackingArray.length - 1) {
+            context.lineTo(this.trackingArray[i].x, this.trackingArray[i].y);
+            context.stroke();
+          } else {
+            context.lineTo(this.trackingArray[i].x, this.trackingArray[i].y);
+          }
+        }
+        context.restore();
+      };
+      drawTracer();
 
-      context.closePath();
-      context.stroke();
-
-      context.beginPath();
-      //  context.lineTo()
-
-      context.fillStyle = 'rgb(255,255,255)';
-
-      // context.fillRect(
-      //   radius * 1.5 * Math.cos(angle),
-      //   radius * 1.5 * Math.sin(angle),
-      //   2,
-      //   2
-      // );
-
-      context.translate(
-        radius * 1.5 * Math.cos(angle),
-        radius * 1.5 * Math.sin(angle)
-      );
-      context.fillRect(0, 0, 2, 2);
-
-      context.beginPath();
-
-      context.moveTo(0, 0);
-      context.lineTo(
-        radius * 0.5 * Math.cos(angle * 2 + Math.PI / 2),
-        radius * 0.5 * Math.sin(angle * 2 + Math.PI / 2)
-      );
-      context.stroke();
+      /********************************************************************************** */
 
       /**
        *
@@ -147,6 +146,9 @@ export class FourierSpiroComponent {
        *
        *
        */
+
+      /********************************************************************************** */
+
       context.restore();
       /**
        *
@@ -176,7 +178,7 @@ export class FourierSpiroComponent {
        *
        */
       window.requestAnimationFrame(() =>
-        this.drawOnCanvas(this.radius, this.angle, this.numPoints)
+        this.drawOnCanvas(this.radius, this.angle)
       );
     }
   }
