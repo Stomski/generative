@@ -32,9 +32,10 @@ export class FourierSpiroComponent {
     );
   }
 
-  radius: number = 100;
+  radius: number = 5000;
   angle: number = (Math.PI / 2) * 3;
   trackingArray: TrackingItem[] = [];
+  frameCount: number = 0;
 
   drawOnCanvas(radius: number, angle: number) {
     /**
@@ -70,7 +71,7 @@ export class FourierSpiroComponent {
 
       context.save();
 
-      context.translate(canvas.width / 2, canvas.height / 2);
+      context.translate(500, 200);
 
       /********************************************************************************** */
       //COLORS
@@ -86,19 +87,24 @@ export class FourierSpiroComponent {
         let y = 0;
         let previousX;
         let previousY;
-        let numGenerations = 9;
+        let numGenerations = 1;
         context.save();
 
         for (let i = 0; i < numGenerations; i++) {
+          context.strokeStyle = `rgb(255, 0, 0)`; // Red
           previousX = x;
           previousY = y;
           context.lineWidth = 1;
+
+          let n = i * 2 + 1;
+          let radius = 80 * (4 / (n * Math.PI));
 
           context.beginPath();
           context.arc(previousX, previousY, radius, 0, Math.PI * 2);
           context.stroke();
 
-          let n = i * 2 + 1;
+          // x += radius * (4 / (n * Math.PI)) * Math.cos(n * angle);
+          // y += radius * (4 / (n * Math.PI)) * Math.sin(n * angle);
 
           x += radius * Math.cos(n * angle);
           y += radius * Math.sin(n * angle);
@@ -113,11 +119,12 @@ export class FourierSpiroComponent {
           radius = radius / 2;
 
           if (i === numGenerations - 1) {
-            this.trackingArray.push({ x: x, y: y });
-          }
+            this.trackingArray.unshift({ x: x, y: y });
+            context.lineWidth = 1;
 
-          // x += radius * Math.cos(n * angle);
-          // y += radius * Math.sin(n * angle);
+            context.moveTo(x, y);
+            context.lineTo(300, y);
+          }
         }
 
         context.stroke();
@@ -126,6 +133,8 @@ export class FourierSpiroComponent {
       };
 
       const drawTracer = () => {
+        context.strokeStyle = `rgb(255, 0, 0)`; // Red
+
         context.save();
         for (let i = 0; i < this.trackingArray.length; i++) {
           if (i === 0) {
@@ -140,8 +149,28 @@ export class FourierSpiroComponent {
         }
         context.restore();
       };
+
+      const drawWave = () => {
+        context.strokeStyle = `rgb(255, 255, 255)`; // WHITE
+
+        context.save();
+        for (let i = 0; i < this.trackingArray.length; i++) {
+          if (i === 0) {
+            context.beginPath();
+            context.moveTo(300, this.trackingArray[i].y);
+          } else if (i === this.trackingArray.length - 1) {
+            context.lineTo(300 + i / 4, this.trackingArray[i].y);
+            context.stroke();
+          } else {
+            context.lineTo(300 + i / 4, this.trackingArray[i].y);
+          }
+        }
+        context.restore();
+      };
+
       drawGeneration(0, radius, angle);
 
+      drawWave();
       drawTracer();
       /********************************************************************************** */
 
@@ -172,6 +201,7 @@ export class FourierSpiroComponent {
        *
        */
       this.angle -= Math.PI / 180;
+      this.frameCount++;
 
       // this.radius++;
       if (this.radius > 300) this.radius = 200;
