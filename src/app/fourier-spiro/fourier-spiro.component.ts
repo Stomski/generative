@@ -1,4 +1,9 @@
 import { Component, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
+import { MatSliderModule } from '@angular/material/slider';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms'; // <-- Import FormsModule
+import { MatInputModule } from '@angular/material/input';
+
 interface TrackingItem {
   x: number;
   y: number;
@@ -8,7 +13,7 @@ interface TrackingItem {
 @Component({
   selector: 'app-fourier-spiro',
   standalone: true,
-  imports: [],
+  imports: [MatSliderModule, CommonModule, FormsModule, MatInputModule],
   templateUrl: './fourier-spiro.component.html',
   styleUrl: './fourier-spiro.component.css',
 })
@@ -19,25 +24,35 @@ export class FourierSpiroComponent {
 
   setCanvasSize() {
     const canvas = this.canvasRef.nativeElement;
-    canvas.width = window.innerWidth * 0.9; // 80% of the window's width
-    canvas.height = window.innerHeight * 0.7; // 60% of the window's height
+    canvas.width = 1300;
+    canvas.height = 300;
   }
 
   ngAfterViewInit() {
     const canvas = this.canvasRef.nativeElement;
     this.ctx = canvas.getContext('2d');
     this.setCanvasSize();
-    window.requestAnimationFrame(() =>
-      this.drawOnCanvas(this.radius, this.angle)
-    );
+    window.requestAnimationFrame(() => this.drawOnCanvas());
   }
 
   radius: number = 5000;
   angle: number = (Math.PI / 2) * 3;
   trackingArray: TrackingItem[] = [];
   frameCount: number = 0;
+  numGenerations: number = 3;
 
-  drawOnCanvas(radius: number, angle: number) {
+  resetTracking() {
+    if (this.ctx) {
+      console.log('reset called');
+      this.trackingArray = [];
+      const context = this.ctx;
+      const canvas = this.canvasRef.nativeElement;
+      context.fillStyle = 'rgb(0,0,0)';
+      context.fillRect(0, 0, canvas.width, canvas.height);
+    }
+  }
+  drawOnCanvas() {
+    // console.log('draw on canvas called, num gen>>>', this.numGenerations);
     /**
      *
      *
@@ -71,7 +86,7 @@ export class FourierSpiroComponent {
 
       context.save();
 
-      context.translate(500, 200);
+      context.translate(500, 150);
 
       /********************************************************************************** */
       //COLORS
@@ -87,10 +102,10 @@ export class FourierSpiroComponent {
         let y = 0;
         let previousX;
         let previousY;
-        let numGenerations = 1;
+
         context.save();
 
-        for (let i = 0; i < numGenerations; i++) {
+        for (let i = 0; i < this.numGenerations; i++) {
           context.strokeStyle = `rgb(255, 0, 0)`; // Red
           previousX = x;
           previousY = y;
@@ -118,7 +133,7 @@ export class FourierSpiroComponent {
 
           radius = radius / 2;
 
-          if (i === numGenerations - 1) {
+          if (i === this.numGenerations - 1) {
             this.trackingArray.unshift({ x: x, y: y });
             context.lineWidth = 1;
 
@@ -168,7 +183,7 @@ export class FourierSpiroComponent {
         context.restore();
       };
 
-      drawGeneration(0, radius, angle);
+      drawGeneration(0, this.radius, this.angle);
 
       drawWave();
       drawTracer();
@@ -201,6 +216,7 @@ export class FourierSpiroComponent {
        *
        */
       this.angle -= Math.PI / 180;
+      console.log('framecount!!!!!!!!!!!!!!!', this.frameCount);
       this.frameCount++;
 
       // this.radius++;
@@ -213,9 +229,7 @@ export class FourierSpiroComponent {
        *
        *
        */
-      window.requestAnimationFrame(() =>
-        this.drawOnCanvas(this.radius, this.angle)
-      );
+      window.requestAnimationFrame(() => this.drawOnCanvas());
     }
   }
 }
