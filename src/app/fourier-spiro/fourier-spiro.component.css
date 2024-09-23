@@ -1,0 +1,8 @@
+#f-spiro-page {
+  display: grid;
+  justify-items: center;
+  align-items: center;
+}
+.modifiers {
+  margin-bottom: 20px;
+}
