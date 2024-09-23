@@ -33,11 +33,11 @@ export class RoseComponent {
   dMax = 120;
   dStep = 1;
 
-  n = 6.324;
-  d = 74.238;
-  numPointsInput = 1000;
+  n = 5;
+  d = 8;
+  numPointsInput = 300;
 
-  pMax = 5000;
+  pMax = 500;
   pMin = 3;
   pStep = 1;
 
@@ -147,7 +147,7 @@ export class RoseComponent {
         canvasHeight / 2 - 8
       );
       context.translate(-canvasWidth / 2, -canvasHeight / 2);
-      this.numPointsInput += 0.0005;
+
       this.n += 0.000000005;
       this.d += 0.00000005;
       window.requestAnimationFrame(() => this.drawOnCanvas());

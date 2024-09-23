@@ -43,7 +43,7 @@ export class FourierSpiroComponent {
 
   resetTracking() {
     if (this.ctx) {
-      console.log('reset called');
+      // console.log('reset called');
       this.trackingArray = [];
       const context = this.ctx;
       const canvas = this.canvasRef.nativeElement;
@@ -216,7 +216,7 @@ export class FourierSpiroComponent {
        *
        */
       this.angle -= Math.PI / 180;
-      console.log('framecount!!!!!!!!!!!!!!!', this.frameCount);
+      // console.log('framecount!!!!!!!!!!!!!!!', this.frameCount);
       this.frameCount++;
 
       // this.radius++;
