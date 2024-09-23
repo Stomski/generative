@@ -1,6 +1,6 @@
 <section id="rose-page">
   <div class="modifiers">
-    <label for="nSlider">n:</label>
+    <label for="nSlider">Point Modifier:</label>
     <mat-slider
       class="sliders"
       [disabled]="disabled"
@@ -18,7 +18,7 @@
         #slider
       />
     </mat-slider>
-    <label for="dSlider">d:</label>
+    <label for="dSlider">Rhodenean Modifier:</label>
     <mat-slider
       class="sliders"
       [disabled]="disabled"
@@ -36,14 +36,14 @@
         #slider
       />
     </mat-slider>
-    <label for="nSlider">number of Points:</label>
+    <label for="nSlider">Density:</label>
     <mat-slider
       class="sliders"
       [disabled]="disabled"
       [max]="pMax"
       [min]="pMin"
       [step]="pStep"
-      [discrete]="thumbLabel"
+      [discrete]="false"
       [showTickMarks]="showTicks"
       [displayWith]="formatLabel"
     >

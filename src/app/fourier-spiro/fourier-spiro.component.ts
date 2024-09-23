@@ -1,9 +1,19 @@
 import { Component, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
+import { MatSliderModule } from '@angular/material/slider';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms'; // <-- Import FormsModule
+import { MatInputModule } from '@angular/material/input';
+
+interface TrackingItem {
+  x: number;
+  y: number;
+  // add other properties as needed
+}
 
 @Component({
   selector: 'app-fourier-spiro',
   standalone: true,
-  imports: [],
+  imports: [MatSliderModule, CommonModule, FormsModule, MatInputModule],
   templateUrl: './fourier-spiro.component.html',
   styleUrl: './fourier-spiro.component.css',
 })
@@ -14,24 +24,35 @@ export class FourierSpiroComponent {
 
   setCanvasSize() {
     const canvas = this.canvasRef.nativeElement;
-    canvas.width = window.innerWidth * 0.9; // 80% of the window's width
-    canvas.height = window.innerHeight * 0.7; // 60% of the window's height
+    canvas.width = 1300;
+    canvas.height = 300;
   }
 
   ngAfterViewInit() {
     const canvas = this.canvasRef.nativeElement;
     this.ctx = canvas.getContext('2d');
     this.setCanvasSize();
-    window.requestAnimationFrame(() =>
-      this.drawOnCanvas(this.radius, this.angle, this.numPoints)
-    );
+    window.requestAnimationFrame(() => this.drawOnCanvas());
   }
 
-  radius: number = 100;
-  angle: number = -Math.PI / 2;
-  numPoints: number = 50;
+  radius: number = 5000;
+  angle: number = (Math.PI / 2) * 3;
+  trackingArray: TrackingItem[] = [];
+  frameCount: number = 0;
+  numGenerations: number = 3;
 
-  drawOnCanvas(radius: number, angle: number, numPoints: number) {
+  resetTracking() {
+    if (this.ctx) {
+      // console.log('reset called');
+      this.trackingArray = [];
+      const context = this.ctx;
+      const canvas = this.canvasRef.nativeElement;
+      context.fillStyle = 'rgb(0,0,0)';
+      context.fillRect(0, 0, canvas.width, canvas.height);
+    }
+  }
+  drawOnCanvas() {
+    // console.log('draw on canvas called, num gen>>>', this.numGenerations);
     /**
      *
      *
@@ -65,80 +86,108 @@ export class FourierSpiroComponent {
 
       context.save();
 
-      context.translate(canvas.width / 2, canvas.height / 2);
+      context.translate(500, 150);
 
-      /**
-       *
-       *
-       *
-       *
-       *
-       */
-
+      /********************************************************************************** */
+      //COLORS
       context.lineWidth = 1;
       context.strokeStyle = `rgb(255, 0, 0)`; // Red
 
-      context.fillStyle = 'rgb(255,255,255)';
-      context.fillRect(0, 0, 2, 2);
+      /************************** */
 
-      context.fillStyle = 'rgb(0,0,0)';
-      context.strokeStyle = `rgb(255, 0, 0)`; // Red
+      //in order to store the path im gonna make an array of vertexs, then iterate at the end and draw a path
 
-      context.beginPath();
-      context.arc(0, 0, radius, 0, 2 * Math.PI);
+      const drawGeneration = (center: any, radius: number, angle: number) => {
+        let x = 0;
+        let y = 0;
+        let previousX;
+        let previousY;
 
-      context.closePath();
-      context.stroke();
+        context.save();
 
-      context.beginPath();
-      context.moveTo(0, 0);
-      context.lineTo(radius * Math.cos(angle), radius * Math.sin(angle));
+        for (let i = 0; i < this.numGenerations; i++) {
+          context.strokeStyle = `rgb(255, 0, 0)`; // Red
+          previousX = x;
+          previousY = y;
+          context.lineWidth = 1;
 
-      context.stroke();
+          let n = i * 2 + 1;
+          let radius = 80 * (4 / (n * Math.PI));
 
-      context.moveTo(
-        radius * 1.5 * Math.cos(angle),
-        radius * 1.5 * Math.sin(angle)
-      );
+          context.beginPath();
+          context.arc(previousX, previousY, radius, 0, Math.PI * 2);
+          context.stroke();
 
-      context.beginPath();
-      context.arc(
-        radius * 1.5 * Math.cos(angle),
-        radius * 1.5 * Math.sin(angle),
-        radius / 2,
-        0,
-        2 * Math.PI
-      );
+          // x += radius * (4 / (n * Math.PI)) * Math.cos(n * angle);
+          // y += radius * (4 / (n * Math.PI)) * Math.sin(n * angle);
 
-      context.closePath();
-      context.stroke();
+          x += radius * Math.cos(n * angle);
+          y += radius * Math.sin(n * angle);
 
-      context.beginPath();
-      //  context.lineTo()
+          context.lineWidth = 2;
 
-      context.fillStyle = 'rgb(255,255,255)';
+          context.beginPath();
+          context.moveTo(previousX, previousY);
+          context.lineTo(x, y);
+          context.stroke();
 
-      // context.fillRect(
-      //   radius * 1.5 * Math.cos(angle),
-      //   radius * 1.5 * Math.sin(angle),
-      //   2,
-      //   2
-      // );
+          radius = radius / 2;
 
-      context.translate(
-        radius * 1.5 * Math.cos(angle),
-        radius * 1.5 * Math.sin(angle)
-      );
-      context.fillRect(0, 0, 2, 2);
+          if (i === this.numGenerations - 1) {
+            this.trackingArray.unshift({ x: x, y: y });
+            context.lineWidth = 1;
 
-      context.beginPath();
+            context.moveTo(x, y);
+            context.lineTo(300, y);
+          }
+        }
 
-      context.moveTo(0, 0);
-      context.lineTo(
-        radius * 0.5 * Math.cos(angle * 2 + Math.PI / 2),
-        radius * 0.5 * Math.sin(angle * 2 + Math.PI / 2)
-      );
-      context.stroke();
+        context.stroke();
+
+        context.restore();
+      };
+
+      const drawTracer = () => {
+        context.strokeStyle = `rgb(255, 0, 0)`; // Red
+
+        context.save();
+        for (let i = 0; i < this.trackingArray.length; i++) {
+          if (i === 0) {
+            context.beginPath();
+            context.moveTo(this.trackingArray[i].x, this.trackingArray[i].y);
+          } else if (i === this.trackingArray.length - 1) {
+            context.lineTo(this.trackingArray[i].x, this.trackingArray[i].y);
+            context.stroke();
+          } else {
+            context.lineTo(this.trackingArray[i].x, this.trackingArray[i].y);
+          }
+        }
+        context.restore();
+      };
+
+      const drawWave = () => {
+        context.strokeStyle = `rgb(255, 255, 255)`; // WHITE
+
+        context.save();
+        for (let i = 0; i < this.trackingArray.length; i++) {
+          if (i === 0) {
+            context.beginPath();
+            context.moveTo(300, this.trackingArray[i].y);
+          } else if (i === this.trackingArray.length - 1) {
+            context.lineTo(300 + i / 4, this.trackingArray[i].y);
+            context.stroke();
+          } else {
+            context.lineTo(300 + i / 4, this.trackingArray[i].y);
+          }
+        }
+        context.restore();
+      };
+
+      drawGeneration(0, this.radius, this.angle);
+
+      drawWave();
+      drawTracer();
+      /********************************************************************************** */
 
       /**
        *
@@ -147,6 +196,9 @@ export class FourierSpiroComponent {
        *
        *
        */
+
+      /********************************************************************************** */
+
       context.restore();
       /**
        *
@@ -164,6 +216,8 @@ export class FourierSpiroComponent {
        *
        */
       this.angle -= Math.PI / 180;
+      // console.log('framecount!!!!!!!!!!!!!!!', this.frameCount);
+      this.frameCount++;
 
       // this.radius++;
       if (this.radius > 300) this.radius = 200;
@@ -175,9 +229,7 @@ export class FourierSpiroComponent {
        *
        *
        */
-      window.requestAnimationFrame(() =>
-        this.drawOnCanvas(this.radius, this.angle, this.numPoints)
-      );
+      window.requestAnimationFrame(() => this.drawOnCanvas());
     }
   }
 }

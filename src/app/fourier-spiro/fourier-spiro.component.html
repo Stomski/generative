@@ -1,3 +1,17 @@
 <section id="f-spiro-page">
+  <div class="modifiers">
+    <label for="numGenerations">number of generations</label>
+
+    <input
+      matInput
+      type="number"
+      [min]="1"
+      [max]="900"
+      [(ngModel)]="numGenerations"
+      (ngModelChange)="resetTracking()"
+      #numGenerations
+      id="numGenerations"
+    />
+  </div>
   <canvas id="f-spiro-canvas" #fSpiroCanvas></canvas>
 </section>
