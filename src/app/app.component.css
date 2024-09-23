@@ -27,7 +27,6 @@ ul {
 
   display: grid;
   grid-template-rows: 70% 30%;
-  height: 15vh;
 
   text-align: center;
 }
