@@ -89,7 +89,7 @@ export class TreeComponent {
         context.moveTo(0, 0);
         context.lineTo(0, -length); // Draw the branch line
         context.stroke();
-        if (length > 1) {
+        if (length > 1.5) {
           // Continue branching if the length is greater than 2
           context.translate(0, -length);
           context.save();
