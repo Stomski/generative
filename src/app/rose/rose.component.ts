@@ -26,12 +26,12 @@ export class RoseComponent {
   nMax = 8;
   nMin = 3;
   showTicks = false;
-  nStep = 0.0001;
-  thumbLabel = false;
+  nStep = 0.1;
+  thumbLabel = true;
 
   dMin = 1;
   dMax = 120;
-  dStep = 0.0005;
+  dStep = 1;
 
   n = 6.324;
   d = 74.238;
@@ -50,7 +50,7 @@ export class RoseComponent {
     const canvas = this.canvasRef.nativeElement;
     this.ctx = canvas.getContext('2d');
     this.setCanvasSize();
-    this.drawOnCanvas();
+    window.requestAnimationFrame(() => this.drawOnCanvas());
   }
 
   setCanvasSize() {
@@ -147,6 +147,10 @@ export class RoseComponent {
         canvasHeight / 2 - 8
       );
       context.translate(-canvasWidth / 2, -canvasHeight / 2);
+      this.numPointsInput += 0.0005;
+      this.n += 0.000000005;
+      this.d += 0.00000005;
+      window.requestAnimationFrame(() => this.drawOnCanvas());
     }
   }
 }
