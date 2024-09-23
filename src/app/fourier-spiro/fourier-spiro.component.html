@@ -9,7 +9,8 @@
       [max]="900"
       [(ngModel)]="numGenerations"
       (ngModelChange)="resetTracking()"
-      #input
+      #numGenerations
+      id="numGenerations"
     />
   </div>
   <canvas id="f-spiro-canvas" #fSpiroCanvas></canvas>
