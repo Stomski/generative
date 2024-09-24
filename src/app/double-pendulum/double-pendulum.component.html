@@ -1,18 +1,7 @@
 <section id="double-pendulum-page">
   <h1>DOUBLE PENDULUM</h1>
-  <!-- <div class="modifiers">
-      <label for="numGenerations">number of generations</label>
-
-      <input
-        matInput
-        type="number"
-        [min]="1"
-        [max]="900"
-        [(ngModel)]="numGenerations"
-        (ngModelChange)="resetTracking()"
-        id="numGenerations"
-        #input
-      />
-    </div> -->
+  <div class="modifiers">
+    <button mat-stroked-button (click)="restart()">Restart</button>
+  </div>
   <canvas id="double-pendulum-canvas" #doublePendulumCanvas></canvas>
 </section>
