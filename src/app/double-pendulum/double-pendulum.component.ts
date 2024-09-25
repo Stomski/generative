@@ -63,13 +63,13 @@ export class DoublePendulumComponent {
   /********************************************** */
   restart() {
     // Reset angles
-    console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
     this.theta1 = Math.PI;
     this.theta2 = Math.PI / Math.floor(Math.random() * 10);
 
     // Reset velocities
     this.thing1.velocity.x = 0.01;
     this.thing2.velocity.x = 0.0;
+    console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
 
     // Reset the path
     this.pathArray = [];
