@@ -1,13 +1,22 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, AfterViewInit } from '@angular/core';
+import { RouterOutlet, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [RouterOutlet],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css',
+  styleUrls: ['./app.component.css'],
 })
-export class AppComponent {
-  title = 'generative';
+export class AppComponent implements AfterViewInit {
+  constructor(private route: ActivatedRoute) {}
+
+  ngAfterViewInit() {
+    console.log('testing from the top of the app component', this.route);
+
+    // Subscribe to route params
+    this.route.params.subscribe((params) => {
+      console.log(params, 'params');
+    });
+  }
 }
