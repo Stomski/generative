@@ -64,7 +64,7 @@ export class DoublePendulumComponent {
   restart() {
     // Reset angles
     this.theta1 = Math.PI;
-    this.theta2 = Math.PI / Math.floor(Math.random() * 10);
+    this.theta2 = Math.PI / Math.floor(Math.random() * 100);
 
     // Reset velocities
     this.thing1.velocity.x = 0.01;
