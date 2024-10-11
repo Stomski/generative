@@ -36,7 +36,7 @@ export class DoublePendulumComponent {
 
   radius1: number = 190;
   theta1: number = Math.PI * 0.99;
-  mass1: number = 10;
+  mass1: number = 100;
 
   thing1 = new physics.Thing(this.pos1, this.accel1, this.vel1, this.mass1);
 
@@ -45,9 +45,9 @@ export class DoublePendulumComponent {
   pos2 = new physics.Position(0, 0);
   accel2 = new physics.Acceleration(0, 0);
   vel2 = new physics.Velocity(0.0, 0);
-  mass2: number = 11;
+  mass2: number = 40;
 
-  radius2: number = 150;
+  radius2: number = 70;
   theta2: number = Math.PI / Math.floor(Math.random() * 100);
 
   thing2 = new physics.Thing(this.pos2, this.accel2, this.vel2, this.mass2);
@@ -64,7 +64,7 @@ export class DoublePendulumComponent {
   restart() {
     // Reset angles
     this.theta1 = Math.PI;
-    this.theta2 = Math.PI / Math.floor(Math.random() * 10);
+    this.theta2 = Math.PI / Math.floor(Math.random() * 100);
 
     // Reset velocities
     this.thing1.velocity.x = 0.01;
