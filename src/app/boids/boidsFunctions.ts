@@ -11,4 +11,12 @@ ie all the operations required in the relationing of the boids
 
 */
 
-export class Boid {}
+export class Boid {
+  //constructor
+  constructor() {
+    this.position = 2;
+  }
+
+  //boids haveeeee velocity, acceleration, position
+  //
+}
