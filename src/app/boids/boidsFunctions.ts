@@ -24,6 +24,9 @@ export class Vec2 {
   add(vector: Vec2): Vec2 {
     return new Vec2(this.x + vector.x, this.y + vector.y);
   }
+  subtract(vector: Vec2): Vec2 {
+    return new Vec2(this.x - vector.x, this.y - vector.y);
+  }
 }
 
 export class Boid {
@@ -33,19 +36,67 @@ export class Boid {
 
   constructor(
     position = new Vec2(),
-    velocity = new Vec2(),
-    acceleration = new Vec2()
+    velocity = new Vec2(Math.random() * 5 - 2.5, Math.random() * 5 - 2.5),
+    acceleration = new Vec2(
+      Math.random() * 0.1 - 0.05,
+      Math.random() * 0.1 - 0.05
+    ) // Random acceleration between -0.05 and 0.05
   ) {
     this.position = position;
     this.velocity = velocity;
     this.acceleration = acceleration;
   }
 
-  // Example method to update boid's position based on velocity and acceleration
-  update(): void {
+  update(canvasWidth: number, canvasHeight: number): void {
     this.velocity = this.velocity.add(this.acceleration);
     this.position = this.position.add(this.velocity);
+
+    // Calculate half of the canvas dimensions
+    const halfWidth = canvasWidth / 2;
+    const halfHeight = canvasHeight / 2;
+
+    // Wrap around logic based on half canvas dimensions
+    if (this.position.x > halfWidth) {
+      this.position.x = -halfWidth; // Wrap to left
+    } else if (this.position.x < -halfWidth) {
+      this.position.x = halfWidth; // Wrap to right
+    }
+
+    if (this.position.y > halfHeight) {
+      this.position.y = -halfHeight; // Wrap to top
+    } else if (this.position.y < -halfHeight) {
+      this.position.y = halfHeight; // Wrap to bottom
+    }
+
     // Reset acceleration after each update
     this.acceleration = new Vec2();
+  }
+
+  steer(force: Vec2) {
+    console.log('steer called !', this.velocity);
+
+    this.velocity = force.subtract(this.velocity);
+    console.log('AFTER STEER  !', this.velocity);
+  }
+
+  alignment(boidArray: Boid[]) {
+    // console.log('ALIGNMENT CALLED !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+
+    let avg = new Vec2();
+    for (let boid of boidArray) {
+      avg = avg.add(boid.velocity);
+    }
+    avg.x = avg.x / boidArray.length;
+    avg.y = avg.y / boidArray.length;
+
+    return avg; // this returns the avg velocity of all the boids sent to it
+  }
+
+  show(context: CanvasRenderingContext2D): void {
+    context.beginPath();
+    context.arc(this.position.x, this.position.y, 5, 0, Math.PI * 2);
+    context.fillStyle = 'beige';
+    context.fill();
+    context.closePath();
   }
 }

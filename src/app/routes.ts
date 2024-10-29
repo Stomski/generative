@@ -4,6 +4,7 @@ import { TreeComponent } from './tree/tree.component';
 import { RoseComponent } from './rose/rose.component';
 import { FourierSpiroComponent } from './fourier-spiro/fourier-spiro.component';
 import { DoublePendulumComponent } from './double-pendulum/double-pendulum.component';
+import { BoidsComponent } from './boids/boids.component';
 
 const routeConfig: Routes = [
   {
@@ -26,6 +27,11 @@ const routeConfig: Routes = [
     path: 'doublePendulum',
     component: DoublePendulumComponent,
     title: 'Double Pendulum',
+  },
+  {
+    path: 'boids',
+    component: BoidsComponent,
+    title: 'Boids Simulation',
   },
 ];
 

@@ -1,13 +1,12 @@
 import { Component, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 import { MatSliderModule } from '@angular/material/slider';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // <-- Import FormsModule
+import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 
 interface TrackingItem {
   x: number;
   y: number;
-  // add other properties as needed
 }
 
 @Component({
