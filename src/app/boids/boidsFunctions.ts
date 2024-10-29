@@ -93,18 +93,25 @@ export class Boid {
     return flockArray;
   }
 
+  // Method to calculate the distance to another Boid
+  distanceTo(otherBoid: Boid): number {
+    const dx = this.position.x - otherBoid.position.x;
+    const dy = this.position.y - otherBoid.position.y;
+    return Math.sqrt(dx * dx + dy * dy);
+  }
+
   update(canvasWidth: number, canvasHeight: number): void {
     this.velocity.add(this.acceleration);
 
-    if (this.velocity.x > 2) {
-      this.velocity.x = 2;
-    } else if (this.velocity.x < -2) {
-      this.velocity.x = -2;
+    if (this.velocity.x > 3) {
+      this.velocity.x = 3;
+    } else if (this.velocity.x < -3) {
+      this.velocity.x = -3;
     }
-    if (this.velocity.y > 2) {
-      this.velocity.y = 2;
-    } else if (this.velocity.y < -2) {
-      this.velocity.y = -2;
+    if (this.velocity.y > 3) {
+      this.velocity.y = 3;
+    } else if (this.velocity.y < -3) {
+      this.velocity.y = -3;
     }
     this.position.add(this.velocity);
 
@@ -129,14 +136,15 @@ export class Boid {
     this.acceleration = new Vec2();
   }
 
-  steer(alignmentForce: Vec2): Vec2 {
+  steer(alignmentForce: Vec2, cohesionForce: Vec2): Vec2 {
     this.acceleration.add(alignmentForce);
-    this.acceleration.divide(2);
+    this.acceleration.add(cohesionForce);
+    this.acceleration.divide(3);
     this.acceleration.multiply(0.01);
     return this.acceleration;
   }
 
-  alignment(boidArray: Boid[]) {
+  alignment(boidArray: Boid[]): Vec2 {
     let avg = new Vec2();
     for (let boid of boidArray) {
       if (boid !== this) {
@@ -144,8 +152,42 @@ export class Boid {
       }
     }
     avg.divide(boidArray.length);
-    console.log('AVG>>>>', avg);
+    // console.log('AVG>>>>', avg);
     return avg; // this returns the avg velocity of all the boids sent to it
+  }
+
+  cohesion(boidArray: Boid[]): Vec2 {
+    let neighborPositionArray: Vec2[] = [];
+    let total = 1;
+    for (let boid of boidArray) {
+      // console.log(boid, 'boid in coheshin<<<<<<<<<<<<<<<');
+      // console.log(
+      //   this.distanceTo(boid),
+      //   '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< distance'
+      // );
+      if (this.distanceTo(boid) < 100) {
+        // console.log(boid);
+        neighborPositionArray.push(boid.position);
+        total++;
+      }
+    }
+    console.log(neighborPositionArray, 'NEIGHBORS FOIND<<<<<<<<<<<<<<<<');
+    if (total === 0) return new Vec2(); // No neighbors within range, return zero vector
+    let averagePosition = new Vec2(0, 0);
+    for (let pos of neighborPositionArray) {
+      console.log(averagePosition, 'AVG POS before i  add<<<<<>>>>>>>>>', pos);
+
+      averagePosition.add(pos); // Add each neighbor's position to the total
+      console.log(averagePosition, 'AVG POS after add<<<<<');
+    }
+    averagePosition.divide(neighborPositionArray.length); // Divide by the number of neighbors to get the average position
+
+    console.log(averagePosition, 'average neighbor<<<<,');
+
+    let awayFromAverage = new Vec2(this.position.x, this.position.y);
+    awayFromAverage.subtract(averagePosition); // Point away from the average position
+    console.log('vector away from average', awayFromAverage);
+    return awayFromAverage;
   }
 
   show(context: CanvasRenderingContext2D): void {

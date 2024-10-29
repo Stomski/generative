@@ -43,9 +43,10 @@ export class BoidsComponent {
 
       flock.forEach((boid) => {
         let alignmentVector = boid.alignment(flock);
-        boid.acceleration = boid.steer(alignmentVector);
+        let cohesionVector = boid.cohesion(flock);
+        boid.acceleration = boid.steer(alignmentVector, cohesionVector);
 
-        console.log('BOID ACCELERATION AFTER ALIGN?>>>>', boid.acceleration);
+        // console.log('BOID ACCELERATION AFTER ALIGN?>>>>', boid.acceleration);
         boid.update(canvas.width, canvas.height);
         boid.show(context);
       });
