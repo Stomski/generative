@@ -23,25 +23,8 @@ export class BoidsComponent {
     const canvas = this.canvasRef.nativeElement;
     this.ctx = canvas.getContext('2d');
     let [width, height] = this.setCanvasSize();
-    let flock = this.newFlock(10, [width, height]);
+    let flock = Boid.newFlock(45, [width, height]);
     window.requestAnimationFrame(() => this.drawOnCanvas(flock));
-  }
-
-  newFlock(size: number, canvasDimensions: number[]) {
-    let flockArray = [];
-    const halfWidth = canvasDimensions[0] / 2;
-    const halfHeight = canvasDimensions[1] / 2;
-
-    for (let i = 0; i < size; i++) {
-      // Generate random positions within the specified range
-      const randomX = Math.random() * (halfWidth * 2) - halfWidth; // Random value between -halfWidth and halfWidth
-      const randomY = Math.random() * (halfHeight * 2) - halfHeight; // Random value between -halfHeight and halfHeight
-
-      // Create a new Boid with the random position
-      let newBoid = new Boid(new Vec2(randomX, randomY));
-      flockArray.push(newBoid);
-    }
-    return flockArray;
   }
 
   drawOnCanvas(flock: Boid[]) {
@@ -59,7 +42,10 @@ export class BoidsComponent {
       */
 
       flock.forEach((boid) => {
-        boid.acceleration = boid.alignment(flock);
+        let alignmentVector = boid.alignment(flock);
+        boid.acceleration = boid.steer(alignmentVector);
+
+        console.log('BOID ACCELERATION AFTER ALIGN?>>>>', boid.acceleration);
         boid.update(canvas.width, canvas.height);
         boid.show(context);
       });
