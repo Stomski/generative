@@ -23,7 +23,8 @@ export class BoidsComponent {
     const canvas = this.canvasRef.nativeElement;
     this.ctx = canvas.getContext('2d');
     let [width, height] = this.setCanvasSize();
-    let flock = Boid.newFlock(45, [width, height]);
+    let flock = Boid.newFlock(500, [width, height]);
+    console.log(flock, '<<<<<<<<<<<<<<<<<<<<<FLOCK IN NGAFTERVBIWE INIT');
     window.requestAnimationFrame(() => this.drawOnCanvas(flock));
   }
 
@@ -43,8 +44,8 @@ export class BoidsComponent {
 
       flock.forEach((boid) => {
         let alignmentVector = boid.alignment(flock);
-        let cohesionVector = boid.cohesion(flock);
-        boid.acceleration = boid.steer(alignmentVector, cohesionVector);
+        let cohesionVector = boid.cohesion(flock, canvas.width, canvas.height);
+        boid.accel = boid.steer(alignmentVector, cohesionVector);
 
         // console.log('BOID ACCELERATION AFTER ALIGN?>>>>', boid.acceleration);
         boid.update(canvas.width, canvas.height);

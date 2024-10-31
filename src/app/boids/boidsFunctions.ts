@@ -37,7 +37,7 @@ export class Vec2 {
     this.x /= factor;
     this.y /= factor;
   }
-  steer(vector: Vec2): Vec2 {
+  steerVec(vector: Vec2): Vec2 {
     return new Vec2(vector.x - this.x, vector.y - this.y);
   }
 }
@@ -45,22 +45,25 @@ export class Vec2 {
 export class Boid {
   position: Vec2;
   velocity: Vec2;
-  acceleration: Vec2;
+  accel: Vec2;
 
-  constructor(
-    position = new Vec2(),
-    velocity = new Vec2(Math.random() * 5 - 2.5, Math.random() * 5 - 2.5),
-    acceleration = new Vec2(
-      Math.random() * 0.1 - 0.05,
-      Math.random() * 0.1 - 0.05
-    ) // Random acceleration between -0.05 and 0.05
-  ) {
-    this.position = position;
-    this.velocity = velocity;
-    this.acceleration = acceleration;
+  constructor(accel: Vec2, position = new Vec2(), velocity = new Vec2(1, 1)) {
+    this.position = new Vec2(position.x, position.y);
+    this.velocity = new Vec2(velocity.x, velocity.y);
+    // console.log('\n Acceleration received in constructor:', accel);
+    this.accel = new Vec2(accel.x, accel.y);
+    // console.log(
+    //   '\nthis.Acceleration after assignment:',
+    //   this.accel,
+    //   '\nthis>>>',
+    //   this
+    // );
+    // console.log('\n', this.accel, '<<<this.accel what the fucl');
+    // console.log('\nthis at the end of the constructor of a BOID:', this);
+    // console.log('this at the end of the constructor of a BOID2222222:', this);
   }
 
-  // Method to generate a new flock with randomized position, velocity, and acceleration
+  // Method to generate a new flock with randomized position, velocity, and accel
   static newFlock(size: number, canvasDimensions: number[]): Boid[] {
     let flockArray: Boid[] = [];
     const [width, height] = canvasDimensions;
@@ -73,20 +76,21 @@ export class Boid {
       );
 
       // Random velocity within specified range
-      const velocity = new Vec2(
-        Math.random() * 4 - 2, // Random between -1 and 1
-        Math.random() * 4 - 2 // Random between -1 and 1
+      const vel = new Vec2(
+        Math.random() * 5 - 1.5, // Random between -1 and 1
+        Math.random() * 3 - 1.5 // Random between -1 and 1
       );
 
-      // Random acceleration within specified range
-      const acceleration = new Vec2(
-        Math.random() * 0.1 - 0.05, // Random between -0.05 and 0.05
-        Math.random() * 0.1 - 0.05 // Random between -0.05 and 0.05
+      // Random accel within specified range
+      const accel = new Vec2(
+        Math.random() * 0.3 - 0.05,
+        Math.random() * 0.1 - 0.05
       );
 
-      // Create new Boid with randomized position, velocity, and acceleration
-      let newBoid = new Boid(position, velocity, acceleration);
-      console.log('newboid>>>>', newBoid);
+      // Create new Boid with randomized position, velocity, and accel
+      let newBoid = new Boid(accel, position, vel);
+      // console.log('newboid>>>>', newBoid);
+      // console.log('accel>>>>??', accel);
       flockArray.push(newBoid);
     }
     // console.log(flockArray, 'FLOCK ARRAY');
@@ -94,25 +98,43 @@ export class Boid {
   }
 
   // Method to calculate the distance to another Boid
-  distanceTo(otherBoid: Boid): number {
+  distanceTo(
+    otherBoid: Boid,
+    canvasWidth: number,
+    canvasHeight: number
+  ): number {
     const dx = this.position.x - otherBoid.position.x;
     const dy = this.position.y - otherBoid.position.y;
+
     return Math.sqrt(dx * dx + dy * dy);
   }
 
   update(canvasWidth: number, canvasHeight: number): void {
-    this.velocity.add(this.acceleration);
+    this.velocity.add(this.accel);
 
-    if (this.velocity.x > 3) {
-      this.velocity.x = 3;
-    } else if (this.velocity.x < -3) {
-      this.velocity.x = -3;
+    if (this.velocity.x > 5) {
+      this.velocity.x = 5;
+    } else if (this.velocity.x < -5) {
+      this.velocity.x = -5;
     }
-    if (this.velocity.y > 3) {
-      this.velocity.y = 3;
-    } else if (this.velocity.y < -3) {
-      this.velocity.y = -3;
+    if (this.velocity.y > 5) {
+      this.velocity.y = 5;
+    } else if (this.velocity.y < -5) {
+      this.velocity.y = -5;
     }
+
+    // if (this.velocity.x < 0.5 && this.velocity.x > 0) {
+    //   this.velocity.x = 0.5;
+    // } else if (this.velocity.x > -0.5 && this.velocity.x < 0) {
+    //   this.velocity.x = -0.5;
+    // }
+
+    // if (this.velocity.y < 0.5 && this.velocity.y > 0) {
+    //   this.velocity.y = 0.5;
+    // } else if (this.velocity.y > -0.5 && this.velocity.y < 0) {
+    //   this.velocity.y = -0.5;
+    // }
+
     this.position.add(this.velocity);
 
     // Calculate half of the canvas dimensions
@@ -132,16 +154,17 @@ export class Boid {
       this.position.y = halfHeight; // Wrap to bottom
     }
 
-    // Reset acceleration after each update
-    this.acceleration = new Vec2();
+    // Reset accel after each update
+    // this.accel = new Vec2();
   }
 
   steer(alignmentForce: Vec2, cohesionForce: Vec2): Vec2 {
-    this.acceleration.add(alignmentForce);
-    this.acceleration.add(cohesionForce);
-    this.acceleration.divide(3);
-    this.acceleration.multiply(0.01);
-    return this.acceleration;
+    this.accel.add(alignmentForce);
+    cohesionForce.multiply(2);
+    this.accel.add(cohesionForce);
+    this.accel.divide(2);
+    this.accel.multiply(0.01);
+    return this.accel;
   }
 
   alignment(boidArray: Boid[]): Vec2 {
@@ -156,38 +179,35 @@ export class Boid {
     return avg; // this returns the avg velocity of all the boids sent to it
   }
 
-  cohesion(boidArray: Boid[]): Vec2 {
+  cohesion(boidArray: Boid[], canvasWidth: number, canvasHeight: number): Vec2 {
     let neighborPositionArray: Vec2[] = [];
     let total = 1;
     for (let boid of boidArray) {
-      // console.log(boid, 'boid in coheshin<<<<<<<<<<<<<<<');
-      // console.log(
-      //   this.distanceTo(boid),
-      //   '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< distance'
-      // );
-      if (this.distanceTo(boid) < 100) {
+      if (this.distanceTo(boid, canvasWidth, canvasHeight) < 20) {
         // console.log(boid);
         neighborPositionArray.push(boid.position);
         total++;
       }
     }
-    console.log(neighborPositionArray, 'NEIGHBORS FOIND<<<<<<<<<<<<<<<<');
     if (total === 0) return new Vec2(); // No neighbors within range, return zero vector
     let averagePosition = new Vec2(0, 0);
     for (let pos of neighborPositionArray) {
-      console.log(averagePosition, 'AVG POS before i  add<<<<<>>>>>>>>>', pos);
-
       averagePosition.add(pos); // Add each neighbor's position to the total
-      console.log(averagePosition, 'AVG POS after add<<<<<');
     }
     averagePosition.divide(neighborPositionArray.length); // Divide by the number of neighbors to get the average position
 
-    console.log(averagePosition, 'average neighbor<<<<,');
-
     let awayFromAverage = new Vec2(this.position.x, this.position.y);
     awayFromAverage.subtract(averagePosition); // Point away from the average position
-    console.log('vector away from average', awayFromAverage);
+
     return awayFromAverage;
+  }
+
+  seperation(
+    boidArray: Boid[],
+    canvasWidth: number,
+    canvasHeight: number
+  ): Vec2 {
+    return new Vec2();
   }
 
   show(context: CanvasRenderingContext2D): void {
