@@ -5,7 +5,6 @@ import { RoseComponent } from './rose/rose.component';
 import { FourierSpiroComponent } from './fourier-spiro/fourier-spiro.component';
 import { DoublePendulumComponent } from './double-pendulum/double-pendulum.component';
 import { BoidsComponent } from './boids/boids.component';
-
 const routeConfig: Routes = [
   {
     path: ``,

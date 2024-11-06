@@ -25,9 +25,10 @@ export class Vec2 {
     this.x += vector.x;
     this.y += vector.y;
   }
-  subtract(vector: Vec2): void {
+  subtract(vector: Vec2): Vec2 {
     this.x -= vector.x;
     this.y -= vector.y;
+    return this;
   }
   multiply(factor: number): void {
     this.x *= factor;
@@ -77,13 +78,13 @@ export class Boid {
 
       // Random velocity within specified range
       const vel = new Vec2(
-        Math.random() * 5 - 1.5, // Random between -1 and 1
+        Math.random() * 3 - 1.5, // Random between -1 and 1
         Math.random() * 3 - 1.5 // Random between -1 and 1
       );
 
       // Random accel within specified range
       const accel = new Vec2(
-        Math.random() * 0.3 - 0.05,
+        Math.random() * 0.1 - 0.05,
         Math.random() * 0.1 - 0.05
       );
 
@@ -112,28 +113,14 @@ export class Boid {
   update(canvasWidth: number, canvasHeight: number): void {
     this.velocity.add(this.accel);
 
-    if (this.velocity.x > 5) {
-      this.velocity.x = 5;
-    } else if (this.velocity.x < -5) {
-      this.velocity.x = -5;
+    while (
+      this.velocity.x > 5 ||
+      this.velocity.x < -5 ||
+      this.velocity.y > 5 ||
+      this.velocity.y < -5
+    ) {
+      this.velocity.multiply(0.9);
     }
-    if (this.velocity.y > 5) {
-      this.velocity.y = 5;
-    } else if (this.velocity.y < -5) {
-      this.velocity.y = -5;
-    }
-
-    // if (this.velocity.x < 0.5 && this.velocity.x > 0) {
-    //   this.velocity.x = 0.5;
-    // } else if (this.velocity.x > -0.5 && this.velocity.x < 0) {
-    //   this.velocity.x = -0.5;
-    // }
-
-    // if (this.velocity.y < 0.5 && this.velocity.y > 0) {
-    //   this.velocity.y = 0.5;
-    // } else if (this.velocity.y > -0.5 && this.velocity.y < 0) {
-    //   this.velocity.y = -0.5;
-    // }
 
     this.position.add(this.velocity);
 
@@ -181,9 +168,9 @@ export class Boid {
 
   cohesion(boidArray: Boid[], canvasWidth: number, canvasHeight: number): Vec2 {
     let neighborPositionArray: Vec2[] = [];
-    let total = 1;
+    let total = 0;
     for (let boid of boidArray) {
-      if (this.distanceTo(boid, canvasWidth, canvasHeight) < 20) {
+      if (this.distanceTo(boid, canvasWidth, canvasHeight) < 50) {
         // console.log(boid);
         neighborPositionArray.push(boid.position);
         total++;
@@ -198,6 +185,7 @@ export class Boid {
 
     let awayFromAverage = new Vec2(this.position.x, this.position.y);
     awayFromAverage.subtract(averagePosition); // Point away from the average position
+    awayFromAverage.multiply(-1);
 
     return awayFromAverage;
   }
@@ -207,6 +195,38 @@ export class Boid {
     canvasWidth: number,
     canvasHeight: number
   ): Vec2 {
+    let neighborArray = [];
+
+    for (let boid of boidArray) {
+      let distanceToNeighbor: number = this.distanceTo(
+        boid,
+        canvasWidth,
+        canvasHeight
+      );
+      if (distanceToNeighbor < 20 && this !== boid) {
+        // console.log(boid);
+        neighborArray.push([
+          new Vec2(boid.position.x, boid.position.y),
+          distanceToNeighbor,
+        ]);
+      }
+    }
+    if (neighborArray.length === 0) return new Vec2(); // No neighbors within range, return zero vector
+    let separationVector = new Vec2();
+
+    for (let [neighborPos, neighborDistance] of neighborArray) {
+      if (neighborPos instanceof Vec2) {
+        console.log(neighborPos, 'neighborPos is a Vec2 instance');
+
+        // Create direction away from neighbor
+        this.position.subtract(neighborPos);
+
+        // separationVector.add(awayVector);
+      } else {
+        console.error('neighborPos is not of type Vec2:', neighborPos);
+      }
+    }
+
     return new Vec2();
   }
 
