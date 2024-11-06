@@ -5,6 +5,7 @@ import { RoseComponent } from './rose/rose.component';
 import { FourierSpiroComponent } from './fourier-spiro/fourier-spiro.component';
 import { DoublePendulumComponent } from './double-pendulum/double-pendulum.component';
 import { BoidsComponent } from './boids/boids.component';
+import { BouncingBallComponent } from './bouncing-ball/bouncing-ball.component';
 const routeConfig: Routes = [
   {
     path: ``,
@@ -21,6 +22,12 @@ const routeConfig: Routes = [
     path: 'fourierSpiro',
     component: FourierSpiroComponent,
     title: 'Fourier Spirograph',
+  },
+
+  {
+    path: 'bouncingBall',
+    component: BouncingBallComponent,
+    title: 'Bouncing Ball',
   },
   {
     path: 'doublePendulum',
